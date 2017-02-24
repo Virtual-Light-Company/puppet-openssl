@@ -41,7 +41,7 @@ Puppet::Type.newtype(:x509_cert) do
   end
 
   newparam(:is_server, :boolean => true) do
-    desc 'Option to create a server certificate using openssl ca rather than a client certificate. Defaults to false so only generates a client cert'
+    desc 'Option to create a server certificate using openssl ca rather than a client certificate'
     newvalues(:true, :false)
     defaultto false
   end
