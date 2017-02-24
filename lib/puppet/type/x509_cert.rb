@@ -40,6 +40,27 @@ Puppet::Type.newtype(:x509_cert) do
     defaultto false
   end
 
+  newparam(:is_server, :boolean => true) do
+    desc 'Option to create a server certificate using openssl ca rather than a client certificate. Defaults to false so only generates a client cert'
+    newvalues(:true, :false)
+    defaultto false
+  end
+
+  newparam(:csr) do
+    desc 'The path to the CSR if producing a server certificate'
+    defaultto do
+      csr = Pathname.new(@resource[:csr])
+      "#{csr.dirname}/#{csr.basename(csr.extname)}.pem"
+    end
+    validate do |value|
+      csr = Pathname.new(value)
+      unless csr.absolute?
+        raise ArgumentError, "CSR Path must be absolute: #{csr}"
+      end
+    end
+  end
+
+
   newparam(:password) do
     desc 'The optional password for the private key'
   end
