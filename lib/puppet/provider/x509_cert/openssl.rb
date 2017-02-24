@@ -65,7 +65,7 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
   end
 
   def create
-    if is_server
+    if resource[:is_server]
       options = [ 'ca',
         '-config', resource[:template],
         '-days', resource[:days],
