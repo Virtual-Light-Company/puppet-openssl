@@ -40,12 +40,10 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
     ini_file  = Puppet::Util::IniConfig::PhysicalFile.new(resource[:template])
     if (req_ext = ini_file.get_section('req_ext'))
       if (value = req_ext['subjectAltName'])
-        puts "SubAltName test"
         return false if value.delete(' ').gsub(/^"|"$/, '') != altName.delete(' ').gsub(/^"|"$/, '').gsub('IPAddress','IP')
       end
     elsif (req_dn = ini_file.get_section('req_distinguished_name'))
       if (value = req_dn['commonName'])
-        puts "DN test " + value + " CN is " + cdata['CN']
         return false if value != cdata['CN']
       end
     end
@@ -58,8 +56,7 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
         return false
       end
       if !self.class.old_cert_is_equal(resource)
-        puts "old cert not equal to new cert"
-        return false
+        return true
       end
       return true
     else
