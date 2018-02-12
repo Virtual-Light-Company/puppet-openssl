@@ -53,17 +53,10 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
   def exists?
     if Pathname.new(resource[:path]).exist?
       if resource[:force] and !self.class.check_private_key(resource)
-
-         raise Puppet::Error, "Forced difference private key change"
-
         return false
       end
 
-      if !self.class.old_cert_is_equal(resource)
-        return false
-      else
-        return true
-      end
+      return self.class.old_cert_is_equal(resource)
     else
       return false
     end
