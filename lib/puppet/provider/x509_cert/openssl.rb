@@ -52,10 +52,6 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
 
   def exists?
     if Pathname.new(resource[:path]).exist?
-      if resource[:force]
-          raise Puppet::Error, "Forced"
-      end
-
       if !self.class.check_private_key(resource)
           raise Puppet::Error, "private key check"
       end
