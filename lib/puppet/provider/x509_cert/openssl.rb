@@ -55,12 +55,10 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
       if resource[:force] and !self.class.check_private_key(resource)
         return false
       end
-      if !self.class.old_cert_is_equal(resource)
-        return true
-      end
-      return true
+
+      return !self.class.old_cert_is_equal(resource)
     else
-      return false
+      return true
     end
   end
 
