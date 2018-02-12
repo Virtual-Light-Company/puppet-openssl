@@ -19,11 +19,6 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
   def self.check_private_key(resource)
     cert = OpenSSL::X509::Certificate.new(File.read(resource[:path]))
     priv = self.private_key(resource)
-
-    if !cert.check_private_key(priv)
-          raise Puppet::Error, "private key check of " + resource[:path] + " and " + resource[:private_key]
-    end
-
     cert.check_private_key(priv)
   end
 
@@ -58,10 +53,17 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
   def exists?
     if Pathname.new(resource[:path]).exist?
       if resource[:force] and !self.class.check_private_key(resource)
+
+         raise Puppet::Error, "Forced difference private key change"
+
         return false
       end
 
-      return !self.class.old_cert_is_equal(resource)
+      if !self.class.old_cert_is_equal(resource)
+        return false
+      else
+        return true
+      end
     else
       return false
     end
