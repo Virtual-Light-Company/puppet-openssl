@@ -20,8 +20,8 @@ Puppet::Type.type(:x509_cert).provide(:openssl) do
     cert = OpenSSL::X509::Certificate.new(File.read(resource[:path]))
     priv = self.private_key(resource)
 
-    if cert.check_private_key(priv)
-          raise Puppet::Error, "private key check of " + resource[:path]
+    if !cert.check_private_key(priv)
+          raise Puppet::Error, "private key check of " + resource[:path] + " and " + resource[:private_key]
     end
 
     cert.check_private_key(priv)
